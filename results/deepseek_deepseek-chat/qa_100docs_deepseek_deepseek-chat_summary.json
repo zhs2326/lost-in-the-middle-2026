@@ -1,0 +1,97 @@
+{
+  "model": "deepseek:deepseek-chat",
+  "task": "multi_document_qa",
+  "num_documents": 100,
+  "results": [
+    {
+      "model": "deepseek:deepseek-chat",
+      "num_documents": 100,
+      "gold_index": 0,
+      "n_examples": 100,
+      "n_failed": 0,
+      "best_subspan_em_first_line": 0.62,
+      "best_subspan_em_full": 0.76
+    },
+    {
+      "model": "deepseek:deepseek-chat",
+      "num_documents": 100,
+      "gold_index": 11,
+      "n_examples": 100,
+      "n_failed": 0,
+      "best_subspan_em_first_line": 0.57,
+      "best_subspan_em_full": 0.68
+    },
+    {
+      "model": "deepseek:deepseek-chat",
+      "num_documents": 100,
+      "gold_index": 22,
+      "n_examples": 100,
+      "n_failed": 0,
+      "best_subspan_em_first_line": 0.54,
+      "best_subspan_em_full": 0.63
+    },
+    {
+      "model": "deepseek:deepseek-chat",
+      "num_documents": 100,
+      "gold_index": 33,
+      "n_examples": 100,
+      "n_failed": 0,
+      "best_subspan_em_first_line": 0.57,
+      "best_subspan_em_full": 0.67
+    },
+    {
+      "model": "deepseek:deepseek-chat",
+      "num_documents": 100,
+      "gold_index": 44,
+      "n_examples": 100,
+      "n_failed": 0,
+      "best_subspan_em_first_line": 0.56,
+      "best_subspan_em_full": 0.67
+    },
+    {
+      "model": "deepseek:deepseek-chat",
+      "num_documents": 100,
+      "gold_index": 55,
+      "n_examples": 100,
+      "n_failed": 0,
+      "best_subspan_em_first_line": 0.54,
+      "best_subspan_em_full": 0.66
+    },
+    {
+      "model": "deepseek:deepseek-chat",
+      "num_documents": 100,
+      "gold_index": 66,
+      "n_examples": 100,
+      "n_failed": 0,
+      "best_subspan_em_first_line": 0.53,
+      "best_subspan_em_full": 0.64
+    },
+    {
+      "model": "deepseek:deepseek-chat",
+      "num_documents": 100,
+      "gold_index": 77,
+      "n_examples": 100,
+      "n_failed": 0,
+      "best_subspan_em_first_line": 0.52,
+      "best_subspan_em_full": 0.62
+    },
+    {
+      "model": "deepseek:deepseek-chat",
+      "num_documents": 100,
+      "gold_index": 88,
+      "n_examples": 100,
+      "n_failed": 0,
+      "best_subspan_em_first_line": 0.51,
+      "best_subspan_em_full": 0.63
+    },
+    {
+      "model": "deepseek:deepseek-chat",
+      "num_documents": 100,
+      "gold_index": 99,
+      "n_examples": 100,
+      "n_failed": 0,
+      "best_subspan_em_first_line": 0.56,
+      "best_subspan_em_full": 0.67
+    }
+  ]
+}

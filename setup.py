@@ -38,4 +38,9 @@ setup(
     packages=find_packages("src"),
     package_dir={"": "src"},
     install_requires=read_requirements("requirements.txt"),
+    extras_require={
+        # Heavy, CUDA-specific deps for the original open-weight local-GPU runs.
+        # Install with: pip install -e .[local-gpu]
+        "local-gpu": read_requirements("requirements-local-gpu.txt"),
+    },
 )

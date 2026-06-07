@@ -1,0 +1,20 @@
+{
+  "model": "claude-sonnet-4-6",
+  "task": "qa_baselines",
+  "results": [
+    {
+      "condition": "oracle",
+      "n": 100,
+      "n_failed": 0,
+      "best_subspan_em_first_line": 0.61,
+      "best_subspan_em_full": 0.94
+    },
+    {
+      "condition": "closedbook",
+      "n": 100,
+      "n_failed": 0,
+      "best_subspan_em_first_line": 0.37,
+      "best_subspan_em_full": 0.58
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "model": "gemini-2.5-flash",
+  "task": "multi_document_qa",
+  "num_documents": 10,
+  "results": [
+    {
+      "model": "gemini-2.5-flash",
+      "num_documents": 10,
+      "gold_index": 0,
+      "n_examples": 100,
+      "n_failed": 0,
+      "best_subspan_em_first_line": 0.72,
+      "best_subspan_em_full": 0.84
+    },
+    {
+      "model": "gemini-2.5-flash",
+      "num_documents": 10,
+      "gold_index": 4,
+      "n_examples": 100,
+      "n_failed": 0,
+      "best_subspan_em_first_line": 0.76,
+      "best_subspan_em_full": 0.82
+    },
+    {
+      "model": "gemini-2.5-flash",
+      "num_documents": 10,
+      "gold_index": 9,
+      "n_examples": 100,
+      "n_failed": 0,
+      "best_subspan_em_first_line": 0.73,
+      "best_subspan_em_full": 0.77
+    }
+  ]
+}

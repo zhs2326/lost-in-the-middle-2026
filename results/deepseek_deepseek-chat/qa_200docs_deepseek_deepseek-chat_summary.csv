@@ -1,0 +1,11 @@
+model,num_documents,gold_index,n_examples,n_failed,best_subspan_em_first_line,best_subspan_em_full
+deepseek:deepseek-chat,200,0,100,0,0.6,0.75
+deepseek:deepseek-chat,200,22,100,0,0.56,0.68
+deepseek:deepseek-chat,200,44,100,0,0.53,0.65
+deepseek:deepseek-chat,200,66,100,0,0.5,0.64
+deepseek:deepseek-chat,200,88,100,0,0.53,0.66
+deepseek:deepseek-chat,200,111,100,0,0.53,0.67
+deepseek:deepseek-chat,200,133,100,0,0.52,0.64
+deepseek:deepseek-chat,200,155,100,0,0.53,0.66
+deepseek:deepseek-chat,200,177,100,0,0.56,0.63
+deepseek:deepseek-chat,200,199,100,0,0.56,0.69

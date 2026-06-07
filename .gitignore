@@ -1,5 +1,12 @@
 nq-open-contriever-msmarco-retrieved-documents.jsonl.gz
 
+# Generated prediction / scoring outputs (run artifacts, not source).
+qa_predictions/
+kv_predictions/
+
+# Local paper drafts (not pushed to git).
+paper/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

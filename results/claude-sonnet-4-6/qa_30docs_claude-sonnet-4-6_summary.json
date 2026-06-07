@@ -1,0 +1,70 @@
+{
+  "model": "claude-sonnet-4-6",
+  "task": "multi_document_qa",
+  "num_documents": 30,
+  "results": [
+    {
+      "model": "claude-sonnet-4-6",
+      "num_documents": 30,
+      "gold_index": 0,
+      "n_examples": 100,
+      "n_failed": 0,
+      "best_subspan_em_first_line": 0.38,
+      "best_subspan_em_full": 0.73
+    },
+    {
+      "model": "claude-sonnet-4-6",
+      "num_documents": 30,
+      "gold_index": 4,
+      "n_examples": 100,
+      "n_failed": 0,
+      "best_subspan_em_first_line": 0.42,
+      "best_subspan_em_full": 0.72
+    },
+    {
+      "model": "claude-sonnet-4-6",
+      "num_documents": 30,
+      "gold_index": 9,
+      "n_examples": 100,
+      "n_failed": 0,
+      "best_subspan_em_first_line": 0.4,
+      "best_subspan_em_full": 0.68
+    },
+    {
+      "model": "claude-sonnet-4-6",
+      "num_documents": 30,
+      "gold_index": 14,
+      "n_examples": 100,
+      "n_failed": 0,
+      "best_subspan_em_first_line": 0.45,
+      "best_subspan_em_full": 0.73
+    },
+    {
+      "model": "claude-sonnet-4-6",
+      "num_documents": 30,
+      "gold_index": 19,
+      "n_examples": 100,
+      "n_failed": 0,
+      "best_subspan_em_first_line": 0.42,
+      "best_subspan_em_full": 0.71
+    },
+    {
+      "model": "claude-sonnet-4-6",
+      "num_documents": 30,
+      "gold_index": 24,
+      "n_examples": 100,
+      "n_failed": 0,
+      "best_subspan_em_first_line": 0.41,
+      "best_subspan_em_full": 0.7
+    },
+    {
+      "model": "claude-sonnet-4-6",
+      "num_documents": 30,
+      "gold_index": 29,
+      "n_examples": 100,
+      "n_failed": 0,
+      "best_subspan_em_first_line": 0.41,
+      "best_subspan_em_full": 0.7
+    }
+  ]
+}
