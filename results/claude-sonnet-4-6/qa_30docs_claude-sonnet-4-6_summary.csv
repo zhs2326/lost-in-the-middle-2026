@@ -1,0 +1,8 @@
+model,num_documents,gold_index,n_examples,n_failed,best_subspan_em_first_line,best_subspan_em_full
+claude-sonnet-4-6,30,0,100,0,0.38,0.73
+claude-sonnet-4-6,30,4,100,0,0.42,0.72
+claude-sonnet-4-6,30,9,100,0,0.4,0.68
+claude-sonnet-4-6,30,14,100,0,0.45,0.73
+claude-sonnet-4-6,30,19,100,0,0.42,0.71
+claude-sonnet-4-6,30,24,100,0,0.41,0.7
+claude-sonnet-4-6,30,29,100,0,0.41,0.7

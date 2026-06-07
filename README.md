@@ -1,178 +1,88 @@
-# Lost in the Middle: How Language Models Use Long Contexts
+# Does "Lost in the Middle" still hold for 2026 frontier LLMs?
 
-This repository contains accompanying material for [Lost in the Middle: How
-Language Models Use Long Contexts](https://arxiv.org/abs/2307.03172).
+A modernized fork of [*Lost in the Middle: How Language Models Use Long Contexts*](https://arxiv.org/abs/2307.03172) (Liu et al., TACL 2024).
 
-## Table of Contents
+The original paper showed a striking **U-shaped** curve: in 2023, models answered best when the relevant document sat at the **start or end** of the context and worst when it was buried in the **middle** — a 15–25 point accuracy drop.
 
-- [Installation](#installation)
-- [Multi-Document Question Answering Experiments](#multi-document-question-answering-experiments)
-- [Multi-Document Question Answering Data](#multi-document-question-answering-data)
-  * [Generating new multi-document QA data.](#generating-new-multi-document-qa-data)
-- [Key-Value Retrieval Experiments](#key-value-retrieval-experiments)
-- [Key-Value Retrieval Data](#key-value-retrieval-data)
-  * [Generating new key-value retrieval data](#generating-new-key-value-retrieval-data)
-- [Testing Prompting Templates](#testing-prompting-templates)
-- [References](#references)
+**This project asks the obvious 2026 question: is that still true?** We re-run the paper's exact position-bias experiments — same NQ-open multi-document QA prompts, same `best_subspan_em` metric — against today's **hosted frontier API models** (OpenAI, Anthropic, Google, and DeepSeek) instead of the 2023 open-weight models, and ask not just *whether* the effect survives but *where it went*.
 
-## Installation
+---
 
-1. Set up a conda environment
+## Findings so far
 
-``` sh
-conda create -n lost-in-the-middle python=3.9 --yes
-conda activate lost-in-the-middle
+**TLDR: lost-in-the-middle didn't vanish — it *shrank* and *went model-specific*, and it *re-emerges* once the context gets long enough.**
+
+At the original benchmark's lengths (10/20/30 docs, ≤~5K tokens), the dramatic 2023 U-shape is gone — accuracy spreads across positions are now just **0.07–0.11** (full-answer `best_subspan_em`, n=100/position) versus the paper's 0.15–0.25. But the four non-reasoning chat models we tested **do not flatten the same way** — each keeps a different residual position bias:
+
+| Model | Position-bias signature (10/20/30-doc QA) |
+|---|---|
+| **claude-sonnet-4-6** | **flat** — most position-robust |
+| **deepseek-chat** | **primacy spike** — gold-at-start ≫ rest |
+| **gemini-2.5-flash** (thinking off) | **deepening middle dip** as docs grow |
+| **gpt-4.1** | **symmetric U** — recovers at the end (recency) |
+
+![Position curves for four 2026 chat models on 30-document QA, with each model's closed-book floor as a dotted line.](results/_cross_model/qa_crossmodel_30docs.png)
+
+*Full-answer `best_subspan_em` vs. gold-document position (0 = start → 1 = end), 30-doc QA, n=100/position; dotted lines are each model's closed-book floor.*
+
+And when we push the context longer (a **scaling tier** at 50 / 100 / 200 docs), the U-shape **comes back**: deepseek-chat (50/100/200 docs) and gemini-2.5-flash (50 docs) both show a clean asymmetric U return, with spreads of **0.11–0.14**. The phenomenon moved right on the context-length axis, exactly as hypothesized.
+
+Two methodological points the data forced (both matter for anyone re-running this):
+
+1. **The paper's first-line metric understates chat models.** Modern models open with a Markdown heading/preamble, so the gold span often isn't on line 1. We report **both** the paper-faithful first-line metric and a lenient full-answer metric everywhere; the gap is large for verbose models (~0.30 for Sonnet) and small for terse ones (~0.06–0.12 for deepseek/gemini).
+2. **NQ-open is contaminated.** Closed-book accuracy (no documents at all) is **0.51–0.59** across models — so half of the questions are answerable from
+   parametric memory, and part of every "robust" curve is recall, not long-context reading. Every curve here is reported against its closed-book floor.
+
+## In progress / what's next
+
+The current results are at **n=100**, where the short-context spreads (0.07–0.11) sit near the statistical noise floor — so the model-specific signatures above are **suggestive, not yet established**. The roadmap is:
+
+1. **Bootstrap CIs at N≥300** — the gate on every shape claim made so far.
+2. **A reasoning model** (GPT-5.1 / Claude extended-thinking / Gemini-thinking) — everything run so far is non-reasoning chat; the open question is *"does test-time reasoning flatten the dip?"*
+3. **Finish the scaling tier** — gemini 200/500 docs, 500 docs on a long-context model, and a second model's full 50/100/200 sweep to pair with deepseek.
+4. **Depth tier** — multi-fact / multi-hop retrieval and NoLiMa-style hard
+   distractors, where position bias is expected to re-amplify.
+
+---
+
+## Running it (no GPU required)
+
+```sh
+pip install -e .          # lightweight deps — enough for the API experiments
 ```
 
-2. Install package and requirements
+Set an API key in a local `.env` (gitignored): `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, `GEMINI_API_KEY`, and/or `DEEPSEEK_API_KEY`. The provider is inferred from the model name (`gpt-*`/`o*` → OpenAI, `claude-*` → Anthropic, `gemini-*` → Google, else `provider:model`, e.g. `deepseek:deepseek-chat`).
 
-``` sh
-pip install -e .
+```sh
+# One QA position run (gold document at index 0, 20-document setting):
+python ./scripts/get_qa_responses_from_api.py \
+  --input-path qa_data/20_total_documents/nq-open-20_total_documents_gold_at_0.jsonl.gz \
+  --model gpt-4.1 --max-examples 100 --num-workers 2 \
+  --output-path qa_predictions/20_total_documents/...gold_at_0-gpt-4.1-predictions.jsonl.gz
+
+# Score into per-model CSV/JSON summaries:
+python ./scripts/summarize_qa_results.py --model gpt-4.1 --num-documents 20 --gold-indices 0 4 9 14 19
+
+# Baselines (oracle ceiling + closed-book floor) and the cross-model figure:
+python ./scripts/summarize_qa_baselines.py --model gpt-4.1
+python ./scripts/plot_model_comparison.py \
+  --models gpt-4.1 deepseek:deepseek-chat gemini-2.5-flash claude-sonnet-4-6 --num-documents 30
 ```
 
-3. (optional) set up pre-commit hooks for development.
+Key scripts added by this fork (under [`scripts/`](./scripts/)): `get_{qa,kv}_responses_from_api.py` (inference), `summarize_qa_results.py` /
+`summarize_qa_baselines.py` (scoring), `plot_results.py` / `plot_qa_comparison.py` / `plot_model_comparison.py` (figures), with the provider-agnostic client in [`src/lost_in_the_middle/api_models.py`](./src/lost_in_the_middle/api_models.py).
+Per-model summaries and figures are written under [`results/`](./results/).
 
-``` sh
-pre-commit install
-```
+---
 
-## Multi-Document Question Answering Experiments
+## Data
 
-See [EXPERIMENTS.md](./EXPERIMENTS.md#multi-document-question-answering) for
-instructions to run and evaluate models on the multi-document QA task.
-
-## Multi-Document Question Answering Data
-
-[`qa_data/`](./qa_data/) contains multi-document question answering data for the
-oracle setting (1 input document, which is exactly the passage that answers the
-question) and 10-, 20-, and 30-document settings (where 1 input passage answers
-the question, and the other passages do not contain an NQ-annotated answer).
-
-Each line of this gzipped file is in the following format:
-
-``` sh
-{
-  "question": "who got the first nobel prize in physics",
-  "answers": [
-    "Wilhelm Conrad Röntgen"
-  ],
-  "ctxs": [
-    ...
-    {
-      "id": <string id, e.g., "71445">,
-      "title": <string title of the wikipedia article that this passage comes from>,
-      "text": <string content of the passage>,
-      "score": <string relevance score, e.g. "1.0510446">,
-      "hasanswer": <boolean, whether any of the values in the `answers` key appears in the text>,
-      "original_retrieval_index": <int indicating the original retrieval index. for example, a value of 0 indicates that this was the top retrieved document>,
-      "isgold": <boolean, true or false indicating if this chunk is the gold answer from NaturalQuestions>
-    },
-    ...
-  ],
-  "nq_annotated_gold": {
-    "title": <string title of the wikipedia article containing the answer, as annotated in NaturalQuestions>,
-    "long_answer": "<string content of the paragraph element containing the answer, as annotated in NaturalQuestions>",
-    "chunked_long_answer": "<string content of the paragraph element containing the answer, randomly chunked to approximately 100 words>",
-    "short_answers": [
-      <string short answers, as annootated in NaturalQuestions>
-    ]
-  }
-}
-```
-
-### Generating new multi-document QA data.
-
-1. First, download Contriever retrieval results for each of the queries:
-
-``` sh
-wget https://nlp.stanford.edu/data/nfliu/lost-in-the-middle/nq-open-contriever-msmarco-retrieved-documents.jsonl.gz
-```
-
-2. Then, to generate examples with 20 total documents with the relevant documents at positions 0, 4, 9, 14, and 19, run:
-
-``` sh
-for gold_index in 0 4 9 14 19; do
-    python -u ./scripts/make_qa_data_from_retrieval_results.py \
-        --input-path nq-open-contriever-msmarco-retrieved-documents.jsonl.gz \
-        --num-total-documents 20 \
-        --gold-index ${gold_index} \
-        --output-path qa_data/nq-open-20_total_documents_gold_at_${gold_index}.jsonl.gz
-done
-```
-
-## Key-Value Retrieval Experiments
-
-See [EXPERIMENTS.md](./EXPERIMENTS.md#key-value-retrieval) for
-instructions to run and evaluate models on the key-value retrieval task.
-
-## Key-Value Retrieval Data
-
-[`kv_retrieval_data/`](./kv_retrieval_data/) contains multi-document question answering data for the
-oracle setting (1 input document, which is exactly the passage the answers the
-question) and 10-, 20-, and 30-document settings (where 1 input passage answers
-the question, and the other passages do not contain an NQ-annotated answer).
-
-Each line of this gzipped file is in the following format:
-
-``` sh
-{
-  "ordered_kv_records": [
-    ...
-    [
-      "adde4211-888b-48e3-9dbe-66c66551b05f",
-      "8bc3e90d-e044-4923-9a5d-7bf48917ed39"
-    ],
-    [
-      "2a8d601d-1d69-4e64-9f90-8ad825a74195",
-      "bb3ba2a5-7de8-434b-a86e-a88bb9fa7289"
-    ],
-    [
-      "006b46ef-03fd-4380-938c-49cb03754370",
-      "9faeacbe-1d0e-40da-a5db-df598a104880"
-    ],
-    ...
-  ],
-  "key": "2a8d601d-1d69-4e64-9f90-8ad825a74195",
-  "value": "bb3ba2a5-7de8-434b-a86e-a88bb9fa7289"
-}
-```
-
-The `ordered_kv_records` is a list of `[key, value]` pairs. The `key` specifies
-a particular key to retrieve from `ordered_kv_records`, and the `value` lists
-its expected associated value.
-
-### Generating new key-value retrieval data
-
-To generate new key-value retrieval data, use:
-
-``` sh
-python -u ./scripts/make_kv_retrieval_data.py \
-    --num-keys 300 \
-    --num-examples 500 \
-    --output-path kv-retrieval_data/kv-retrieval-300_keys.jsonl.gz
-```
-
-## Testing Prompting Templates
-
-Code for converting the examples into string prompts is in
-[`src/lost_in_the_middle/prompting.py`](./src/lost_in_the_middle/prompting.py). 
-After following the installation instructions above, you can run tests with:
-
-``` sh
-$ py.test tests/
-========================================= test session starts =========================================
-platform linux -- Python 3.9.17, pytest-7.4.0, pluggy-1.2.0
-rootdir: /home/nfliu/git/lost-in-the-middle
-collected 7 items
-
-tests/test_prompting.py .......                                                                 [100%]
-
-========================================== 7 passed in 0.08s ==========================================
-```
+[`qa_data/`](./qa_data/) ships the oracle (1 gold doc) and 10/20/30-document NQ-open settings; the longer 50–500-document sets are generated from the Contriever retrieval file (see [EXPERIMENTS.md](./EXPERIMENTS.md) and `make_qa_data_from_retrieval_results.py`). [`kv_retrieval_data/`](./kv_retrieval_data/) ships the synthetic key-value retrieval
+sets (75/140/300 keys).
 
 ## References
 
-Please consider citing our work if you found this code or our paper beneficial to your research.
+This fork builds directly on the original work; please cite it:
 
 ```
 @misc{liu-etal:2023:arxiv,

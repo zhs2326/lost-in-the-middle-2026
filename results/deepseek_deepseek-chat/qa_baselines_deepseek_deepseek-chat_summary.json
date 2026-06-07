@@ -1,0 +1,20 @@
+{
+  "model": "deepseek:deepseek-chat",
+  "task": "qa_baselines",
+  "results": [
+    {
+      "condition": "oracle",
+      "n": 100,
+      "n_failed": 0,
+      "best_subspan_em_first_line": 0.96,
+      "best_subspan_em_full": 0.97
+    },
+    {
+      "condition": "closedbook",
+      "n": 100,
+      "n_failed": 0,
+      "best_subspan_em_first_line": 0.48,
+      "best_subspan_em_full": 0.56
+    }
+  ]
+}

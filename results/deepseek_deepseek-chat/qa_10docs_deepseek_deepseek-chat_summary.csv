@@ -1,0 +1,4 @@
+model,num_documents,gold_index,n_examples,n_failed,best_subspan_em_first_line,best_subspan_em_full
+deepseek:deepseek-chat,10,0,100,0,0.72,0.82
+deepseek:deepseek-chat,10,4,100,0,0.69,0.78
+deepseek:deepseek-chat,10,9,100,0,0.69,0.75

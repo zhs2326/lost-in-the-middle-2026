@@ -1,0 +1,3 @@
+condition,n,n_failed,best_subspan_em_first_line,best_subspan_em_full
+oracle,100,0,0.93,0.94
+closedbook,100,0,0.41,0.51

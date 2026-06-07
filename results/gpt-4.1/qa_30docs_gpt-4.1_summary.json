@@ -1,0 +1,70 @@
+{
+  "model": "gpt-4.1",
+  "task": "multi_document_qa",
+  "num_documents": 30,
+  "results": [
+    {
+      "model": "gpt-4.1",
+      "num_documents": 30,
+      "gold_index": 0,
+      "n_examples": 100,
+      "n_failed": 0,
+      "best_subspan_em_first_line": 0.62,
+      "best_subspan_em_full": 0.77
+    },
+    {
+      "model": "gpt-4.1",
+      "num_documents": 30,
+      "gold_index": 4,
+      "n_examples": 100,
+      "n_failed": 0,
+      "best_subspan_em_first_line": 0.62,
+      "best_subspan_em_full": 0.73
+    },
+    {
+      "model": "gpt-4.1",
+      "num_documents": 30,
+      "gold_index": 9,
+      "n_examples": 100,
+      "n_failed": 0,
+      "best_subspan_em_first_line": 0.59,
+      "best_subspan_em_full": 0.72
+    },
+    {
+      "model": "gpt-4.1",
+      "num_documents": 30,
+      "gold_index": 14,
+      "n_examples": 100,
+      "n_failed": 0,
+      "best_subspan_em_first_line": 0.62,
+      "best_subspan_em_full": 0.71
+    },
+    {
+      "model": "gpt-4.1",
+      "num_documents": 30,
+      "gold_index": 19,
+      "n_examples": 100,
+      "n_failed": 0,
+      "best_subspan_em_first_line": 0.6,
+      "best_subspan_em_full": 0.7
+    },
+    {
+      "model": "gpt-4.1",
+      "num_documents": 30,
+      "gold_index": 24,
+      "n_examples": 100,
+      "n_failed": 0,
+      "best_subspan_em_first_line": 0.59,
+      "best_subspan_em_full": 0.7
+    },
+    {
+      "model": "gpt-4.1",
+      "num_documents": 30,
+      "gold_index": 29,
+      "n_examples": 100,
+      "n_failed": 0,
+      "best_subspan_em_first_line": 0.6,
+      "best_subspan_em_full": 0.75
+    }
+  ]
+}

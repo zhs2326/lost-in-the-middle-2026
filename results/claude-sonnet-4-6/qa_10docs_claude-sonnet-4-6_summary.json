@@ -1,0 +1,34 @@
+{
+  "model": "claude-sonnet-4-6",
+  "task": "multi_document_qa",
+  "num_documents": 10,
+  "results": [
+    {
+      "model": "claude-sonnet-4-6",
+      "num_documents": 10,
+      "gold_index": 0,
+      "n_examples": 100,
+      "n_failed": 0,
+      "best_subspan_em_first_line": 0.38,
+      "best_subspan_em_full": 0.81
+    },
+    {
+      "model": "claude-sonnet-4-6",
+      "num_documents": 10,
+      "gold_index": 4,
+      "n_examples": 100,
+      "n_failed": 0,
+      "best_subspan_em_first_line": 0.42,
+      "best_subspan_em_full": 0.76
+    },
+    {
+      "model": "claude-sonnet-4-6",
+      "num_documents": 10,
+      "gold_index": 9,
+      "n_examples": 100,
+      "n_failed": 0,
+      "best_subspan_em_first_line": 0.4,
+      "best_subspan_em_full": 0.78
+    }
+  ]
+}

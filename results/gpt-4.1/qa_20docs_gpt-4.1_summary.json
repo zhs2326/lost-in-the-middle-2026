@@ -1,0 +1,52 @@
+{
+  "model": "gpt-4.1",
+  "task": "multi_document_qa",
+  "num_documents": 20,
+  "results": [
+    {
+      "model": "gpt-4.1",
+      "num_documents": 20,
+      "gold_index": 0,
+      "n_examples": 100,
+      "n_failed": 0,
+      "best_subspan_em_first_line": 0.66,
+      "best_subspan_em_full": 0.8
+    },
+    {
+      "model": "gpt-4.1",
+      "num_documents": 20,
+      "gold_index": 4,
+      "n_examples": 100,
+      "n_failed": 0,
+      "best_subspan_em_first_line": 0.68,
+      "best_subspan_em_full": 0.79
+    },
+    {
+      "model": "gpt-4.1",
+      "num_documents": 20,
+      "gold_index": 9,
+      "n_examples": 100,
+      "n_failed": 0,
+      "best_subspan_em_first_line": 0.62,
+      "best_subspan_em_full": 0.75
+    },
+    {
+      "model": "gpt-4.1",
+      "num_documents": 20,
+      "gold_index": 14,
+      "n_examples": 100,
+      "n_failed": 0,
+      "best_subspan_em_first_line": 0.63,
+      "best_subspan_em_full": 0.72
+    },
+    {
+      "model": "gpt-4.1",
+      "num_documents": 20,
+      "gold_index": 19,
+      "n_examples": 100,
+      "n_failed": 0,
+      "best_subspan_em_first_line": 0.63,
+      "best_subspan_em_full": 0.76
+    }
+  ]
+}

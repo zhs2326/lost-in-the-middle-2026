@@ -1,0 +1,11 @@
+model,num_documents,gold_index,n_examples,n_failed,best_subspan_em_first_line,best_subspan_em_full
+gemini-2.5-flash,50,0,100,0,0.64,0.75
+gemini-2.5-flash,50,5,100,0,0.61,0.67
+gemini-2.5-flash,50,11,100,0,0.59,0.65
+gemini-2.5-flash,50,16,100,0,0.57,0.64
+gemini-2.5-flash,50,22,100,0,0.58,0.66
+gemini-2.5-flash,50,27,100,0,0.57,0.65
+gemini-2.5-flash,50,33,100,0,0.59,0.64
+gemini-2.5-flash,50,38,100,0,0.6,0.65
+gemini-2.5-flash,50,44,100,0,0.59,0.66
+gemini-2.5-flash,50,49,100,0,0.65,0.69

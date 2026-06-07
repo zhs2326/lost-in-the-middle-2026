@@ -1,0 +1,4 @@
+model,num_documents,gold_index,n_examples,n_failed,best_subspan_em_first_line,best_subspan_em_full
+gpt-4.1,10,0,100,0,0.71,0.83
+gpt-4.1,10,4,100,0,0.68,0.76
+gpt-4.1,10,9,100,0,0.71,0.77
