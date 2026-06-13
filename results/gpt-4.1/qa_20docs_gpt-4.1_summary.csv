@@ -1,6 +1,6 @@
-model,num_documents,gold_index,n_examples,n_failed,best_subspan_em_first_line,best_subspan_em_full
-gpt-4.1,20,0,100,0,0.66,0.8
-gpt-4.1,20,4,100,0,0.68,0.79
-gpt-4.1,20,9,100,0,0.62,0.75
-gpt-4.1,20,14,100,0,0.63,0.72
-gpt-4.1,20,19,100,0,0.63,0.76
+model,num_documents,gold_index,n_examples,n_failed,best_subspan_em_first_line,best_subspan_em_full,em_first_line_ci_low,em_first_line_ci_high,em_full_ci_low,em_full_ci_high,ref_gold_index,em_first_line_diff_vs_ref,em_first_line_diff_ci_low,em_first_line_diff_ci_high,em_first_line_diff_excludes_zero,em_full_diff_vs_ref,em_full_diff_ci_low,em_full_diff_ci_high,em_full_diff_excludes_zero
+gpt-4.1,20,0,100,0,0.66,0.8,0.56,0.75,0.72,0.88,0,0.0,0.0,0.0,False,0.0,0.0,0.0,False
+gpt-4.1,20,4,100,0,0.68,0.79,0.59,0.77,0.71,0.87,0,0.020000000000000018,-0.030000000000000027,0.07000000000000006,False,-0.010000000000000009,-0.08000000000000007,0.05999999999999994,False
+gpt-4.1,20,9,100,0,0.62,0.75,0.52,0.71,0.66,0.83,0,-0.040000000000000036,-0.12,0.030000000000000027,False,-0.050000000000000044,-0.13,0.030000000000000027,False
+gpt-4.1,20,14,100,0,0.63,0.72,0.53,0.72,0.63,0.8,0,-0.030000000000000027,-0.09999999999999998,0.040000000000000036,False,-0.08000000000000007,-0.15000000000000002,-0.010000000000000009,True
+gpt-4.1,20,19,100,0,0.63,0.76,0.53,0.72,0.67,0.84,0,-0.030000000000000027,-0.09999999999999998,0.040000000000000036,False,-0.040000000000000036,-0.1100000000000001,0.030000000000000027,False

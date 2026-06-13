@@ -25,7 +25,11 @@ At the original benchmark's lengths (10/20/30 docs, ≤~5K tokens), the dramatic
 
 *Full-answer `best_subspan_em` vs. gold-document position (0 = start → 1 = end), 30-doc QA, n=100/position; dotted lines are each model's closed-book floor.*
 
-And when we push the context longer (a **scaling tier** at 50 / 100 / 200 docs), the U-shape **comes back**: deepseek-chat (50/100/200 docs) and gemini-2.5-flash (50 docs) both show a clean asymmetric U return, with spreads of **0.11–0.14**. The phenomenon moved right on the context-length axis, exactly as hypothesized.
+And when we push the context longer (a **scaling tier** out to 50 / 100 / 200 / 500 docs, ~79K tokens), the U-shape **comes back**: deepseek-chat and gemini-2.5-flash (both 50/100/200/500 docs) show a clean asymmetric U that **persists all the way to 500 docs** (spreads **0.11–0.15**), and gpt-4.1 (100/200 docs) shows its symmetric U with gold-at-end fully recovering. The phenomenon moved right on the context-length axis, exactly as hypothesized.
+
+![Position curves for the scaling-tier models on 100-document QA, with each model's closed-book floor as a dotted line.](results/_cross_model/qa_crossmodel_100docs.png)
+
+*Full-answer `best_subspan_em` vs. gold-document position (0 = start → 1 = end), 100-doc QA, n=100/position; dotted lines are each model's closed-book floor (claude-sonnet-4-6 has no scaling tier, so it is absent here).*
 
 Two methodological points the data forced (both matter for anyone re-running this):
 
@@ -35,11 +39,11 @@ Two methodological points the data forced (both matter for anyone re-running thi
 
 ## In progress / what's next
 
-The current results are at **n=100**, where the short-context spreads (0.07–0.11) sit near the statistical noise floor — so the model-specific signatures above are **suggestive, not yet established**. The roadmap is:
+The current short-context results are at **n=100**, where the spreads (0.07–0.11) sit near the statistical noise floor. We've now added seeded bootstrap 95% CIs (B=10,000; per-position, paired-vs-start, and best−worst spread) wired through the scorer and plots — and they confirm n=100 is underpowered at short context, so the model-specific signatures above are **suggestive, not yet established**. The roadmap is:
 
-1. **Bootstrap CIs at N≥300** — the gate on every shape claim made so far.
+1. **N≥300 to confirm the short-context shapes** — the CI machinery is done; the gap is sample size. Re-run at n=300 is complete for **deepseek + gemini** (both confirm a real effect that *grows with doc count*, true magnitude ~0.04–0.11 after regression to the mean); **gpt-4.1 + sonnet still pending**.
 2. **A reasoning model** (GPT-5.1 / Claude extended-thinking / Gemini-thinking) — everything run so far is non-reasoning chat; the open question is *"does test-time reasoning flatten the dip?"*
-3. **Finish the scaling tier** — gemini 200/500 docs, 500 docs on a long-context model, and a second model's full 50/100/200 sweep to pair with deepseek.
+3. **Finish the scaling tier** — deepseek + gemini now run the full 50/100/200/500-doc tier and gpt-4.1 is at 100/200; the remainder is the rest of the gpt-4.1 tier (50/500 docs).
 4. **Depth tier** — multi-fact / multi-hop retrieval and NoLiMa-style hard
    distractors, where position bias is expected to re-amplify.
 
@@ -70,7 +74,7 @@ python ./scripts/plot_model_comparison.py \
 ```
 
 Key scripts added by this fork (under [`scripts/`](./scripts/)): `get_{qa,kv}_responses_from_api.py` (inference), `summarize_qa_results.py` /
-`summarize_qa_baselines.py` (scoring), `plot_results.py` / `plot_qa_comparison.py` / `plot_model_comparison.py` (figures), with the provider-agnostic client in [`src/lost_in_the_middle/api_models.py`](./src/lost_in_the_middle/api_models.py).
+`summarize_qa_baselines.py` (scoring), `plot_results.py` / `plot_qa_comparison.py` / `plot_model_comparison.py` (figures), with the provider-agnostic client in [`src/lost_in_the_middle/api_models.py`](./src/lost_in_the_middle/api_models.py). For the long-context sweeps there are also batch-mode inference scripts (`get_qa_responses_from_{openai,gemini}_batch.py`, ~50% cheaper and quota-friendly), and bootstrap CIs live in [`src/lost_in_the_middle/bootstrap.py`](./src/lost_in_the_middle/bootstrap.py).
 Per-model summaries and figures are written under [`results/`](./results/).
 
 ---

@@ -81,7 +81,14 @@ def load_summary(slug, num_documents):
     first = [float(r["best_subspan_em_first_line"]) for r in rows]
     full = [float(r["best_subspan_em_full"]) for r in rows]
     n = rows[0]["n_examples"] if rows else "?"
-    return rel, first, full, n
+    # Bootstrap 95% CI bounds, when the summary carries them (older summaries may not).
+    def _band(lo_col, hi_col):
+        if rows and lo_col in rows[0] and hi_col in rows[0]:
+            return [float(r[lo_col]) for r in rows], [float(r[hi_col]) for r in rows]
+        return None
+    first_ci = _band("em_first_line_ci_low", "em_first_line_ci_high")
+    full_ci = _band("em_full_ci_low", "em_full_ci_high")
+    return rel, first, full, n, first_ci, full_ci
 
 
 def main():
@@ -106,11 +113,16 @@ def main():
     fallback = fallback_color_iter()
 
     for num_documents in document_counts:
-        rel, first, full, n = load_summary(slug, num_documents)
+        rel, first, full, n, first_ci, full_ci = load_summary(slug, num_documents)
         color = DOC_COUNT_COLORS.get(num_documents) or next(fallback, "#333333")
         label = f"{num_documents} documents"
         ax_first.plot(rel, first, marker="o", color=color, label=label)
         ax_full.plot(rel, full, marker="o", color=color, label=label)
+        # Shade the bootstrap 95% CI so overlapping bands visibly read as "flat / noisy".
+        if first_ci is not None:
+            ax_first.fill_between(rel, first_ci[0], first_ci[1], color=color, alpha=0.15, linewidth=0)
+        if full_ci is not None:
+            ax_full.fill_between(rel, full_ci[0], full_ci[1], color=color, alpha=0.15, linewidth=0)
 
     # Oracle (upper bound) and closed-book (parametric-memory floor) reference lines.
     baselines = load_baselines(slug)

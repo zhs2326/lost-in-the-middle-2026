@@ -1,4 +1,4 @@
-model,num_documents,gold_index,n_examples,n_failed,best_subspan_em_first_line,best_subspan_em_full
-gemini-2.5-flash,10,0,100,0,0.72,0.84
-gemini-2.5-flash,10,4,100,0,0.76,0.82
-gemini-2.5-flash,10,9,100,0,0.73,0.77
+model,num_documents,gold_index,n_examples,n_failed,best_subspan_em_first_line,best_subspan_em_full,em_first_line_ci_low,em_first_line_ci_high,em_full_ci_low,em_full_ci_high,ref_gold_index,em_first_line_diff_vs_ref,em_first_line_diff_ci_low,em_first_line_diff_ci_high,em_first_line_diff_excludes_zero,em_full_diff_vs_ref,em_full_diff_ci_low,em_full_diff_ci_high,em_full_diff_excludes_zero
+gemini-2.5-flash,10,0,300,0,0.7433333333333333,0.8066666666666666,0.6933333333333334,0.7933333333333333,0.76,0.85,0,0.0,0.0,0.0,False,0.0,0.0,0.0,False
+gemini-2.5-flash,10,4,300,0,0.7366666666666667,0.78,0.6866666666666666,0.7866666666666666,0.7333333333333333,0.8266666666666667,0,-0.006666666666666599,-0.043333333333333335,0.029999999999999916,False,-0.026666666666666616,-0.05999999999999994,0.00666666666666671,False
+gemini-2.5-flash,10,9,300,0,0.7266666666666667,0.7766666666666666,0.6733333333333333,0.7766666666666666,0.73,0.8233333333333334,0,-0.016666666666666607,-0.05666666666666664,0.023333333333333317,False,-0.030000000000000027,-0.06666666666666665,0.00666666666666671,False

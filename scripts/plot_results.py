@@ -3,7 +3,11 @@
 
 Scores the prediction JSONL(.gz) files written by `run_api_sweep.py` /
 `get_*_responses_from_api.py` using the official metrics, then draws accuracy vs.
-gold position for the multi-document QA and/or key-value retrieval tasks.
+gold position for the multi-document QA and/or key-value retrieval tasks, with a
+**bootstrap 95% confidence interval** error bar on every point (seeded, so the
+figure is deterministic). At n=100 the bars are wide relative to the ~0.07-0.14
+position spreads — which is the whole point: a curve whose error bars overlap
+should *look* flat, not like a U.
 
 Example:
 
@@ -21,8 +25,10 @@ import sys
 
 import matplotlib
 import matplotlib.pyplot as plt
+import numpy as np
 from xopen import xopen
 
+from lost_in_the_middle.bootstrap import DEFAULT_B, DEFAULT_SEED
 from lost_in_the_middle.metrics import best_subspan_em
 
 matplotlib.use("Agg")
@@ -39,24 +45,24 @@ def _gold_index_from_path(path):
 
 
 def _score_qa_file(path):
-    """Paper-faithful metric: best_subspan_em over the FIRST LINE of the answer."""
+    """Paper-faithful metric: per-example best_subspan_em over the FIRST LINE."""
     scores = []
     with xopen(path) as fin:
         for line in fin:
             ex = json.loads(line)
             prediction = ex["model_answer"].split("\n")[0].strip()
             scores.append(best_subspan_em(prediction=prediction, ground_truths=ex["answers"]))
-    return statistics.mean(scores) if scores else float("nan"), len(scores)
+    return scores
 
 
 def _score_qa_file_full(path):
-    """Lenient metric: best_subspan_em over the WHOLE answer (forgives verbose/markdown preambles)."""
+    """Lenient metric: per-example best_subspan_em over the WHOLE answer."""
     scores = []
     with xopen(path) as fin:
         for line in fin:
             ex = json.loads(line)
             scores.append(best_subspan_em(prediction=ex["model_answer"], ground_truths=ex["answers"]))
-    return statistics.mean(scores) if scores else float("nan"), len(scores)
+    return scores
 
 
 def _score_kv_file(path):
@@ -65,25 +71,46 @@ def _score_kv_file(path):
         for line in fin:
             ex = json.loads(line)
             scores.append(1.0 if ex["value"].lower() in ex["model_answer"].lower() else 0.0)
-    return statistics.mean(scores) if scores else float("nan"), len(scores)
+    return scores
+
+
+def _bootstrap_ci(scores, B=DEFAULT_B, seed=DEFAULT_SEED):
+    """Percentile bootstrap 95% CI of the mean of 0/1 scores (seeded)."""
+    arr = np.asarray(scores, dtype=float)
+    n = len(arr)
+    if n == 0:
+        return float("nan"), float("nan")
+    rng = np.random.default_rng(seed)
+    idx = rng.integers(0, n, size=(B, n))
+    reps = arr[idx].mean(axis=1)
+    return float(np.percentile(reps, 2.5)), float(np.percentile(reps, 97.5))
 
 
 def collect(pattern, score_fn):
-    """Return ([gold_index...], [score...], n_examples) sorted by gold index."""
+    """Return ([gold_index...], [mean...], [ci_low...], [ci_high...], n_examples) sorted by gold index."""
     points = []
     n_examples = None
     for path in glob.glob(pattern):
         gold_index = _gold_index_from_path(path)
         if gold_index is None:
             continue
-        score, n = score_fn(path)
-        n_examples = n
-        points.append((gold_index, score))
+        scores = score_fn(path)
+        n_examples = len(scores)
+        mean = statistics.mean(scores) if scores else float("nan")
+        lo, hi = _bootstrap_ci(scores)
+        points.append((gold_index, mean, lo, hi))
     points.sort()
     if not points:
-        return [], [], n_examples
-    xs, ys = zip(*points)
-    return list(xs), list(ys), n_examples
+        return [], [], [], [], n_examples
+    xs, ys, los, his = zip(*points)
+    return list(xs), list(ys), list(los), list(his), n_examples
+
+
+def _yerr(ys, los, his):
+    """Asymmetric error-bar arrays (distance from mean down to ci_low / up to ci_high)."""
+    lower = [y - lo for y, lo in zip(ys, los)]
+    upper = [hi - y for y, hi in zip(ys, his)]
+    return [lower, upper]
 
 
 def main():
@@ -104,37 +131,34 @@ def main():
     qa_pattern = f"qa_predictions/{args.num_documents}_total_documents/*gold_at_*-{slug}-predictions.jsonl.gz"
     kv_pattern = f"kv_predictions/kv-retrieval-{args.num_keys}_keys_gold_at_*-{slug}-predictions.jsonl.gz"
 
-    qa_x, qa_y, qa_n = collect(qa_pattern, _score_qa_file) if args.task in ("qa", "both") else ([], [], None)
-    qa_xf, qa_yf, _ = collect(qa_pattern, _score_qa_file_full) if args.task in ("qa", "both") else ([], [], None)
-    kv_x, kv_y, kv_n = collect(kv_pattern, _score_kv_file) if args.task in ("kv", "both") else ([], [], None)
+    empty = ([], [], [], [], None)
+    qa_x, qa_y, qa_lo, qa_hi, qa_n = collect(qa_pattern, _score_qa_file) if args.task in ("qa", "both") else empty
+    qa_xf, qa_yf, qa_lof, qa_hif, _ = collect(qa_pattern, _score_qa_file_full) if args.task in ("qa", "both") else empty
+    kv_x, kv_y, kv_lo, kv_hi, kv_n = collect(kv_pattern, _score_kv_file) if args.task in ("kv", "both") else empty
 
-    panels = [p for p in [("qa", qa_x, qa_y, qa_n), ("kv", kv_x, kv_y, kv_n)] if p[1]]
+    panels = [p for p in [("qa", qa_x, qa_y, qa_lo, qa_hi, qa_n), ("kv", kv_x, kv_y, kv_lo, kv_hi, kv_n)] if p[1]]
     if not panels:
         logger.error("No prediction files found for model slug '%s'. Patterns:\n  %s\n  %s", slug, qa_pattern, kv_pattern)
         sys.exit(1)
 
     fig, axes = plt.subplots(1, len(panels), figsize=(6.4 * len(panels), 4.8), squeeze=False)
-    for ax, (kind, xs, ys, n) in zip(axes[0], panels):
+    for ax, (kind, xs, ys, los, his, n) in zip(axes[0], panels):
         if kind == "qa":
-            # Paper-faithful (first-line) curve.
-            ax.plot(xs, ys, marker="o", linewidth=2, markersize=8, color="#1f77b4",
-                    label="best_subspan_em (first line — paper metric)")
-            for x, y in zip(xs, ys):
-                ax.annotate(f"{y:.2f}", (x, y), textcoords="offset points", xytext=(0, -14), ha="center", fontsize=8)
+            # Paper-faithful (first-line) curve with bootstrap CI error bars.
+            ax.errorbar(xs, ys, yerr=_yerr(ys, los, his), marker="o", linewidth=2, markersize=8,
+                        color="#1f77b4", capsize=4, label="best_subspan_em (first line — paper metric)")
             # Lenient (full-answer) curve, if available.
             if qa_xf:
-                ax.plot(qa_xf, qa_yf, marker="s", linewidth=2, markersize=7, color="#ff7f0e", linestyle="--",
-                        label="best_subspan_em (full answer — lenient)")
-                for x, y in zip(qa_xf, qa_yf):
-                    ax.annotate(f"{y:.2f}", (x, y), textcoords="offset points", xytext=(0, 8), ha="center", fontsize=8)
+                ax.errorbar(qa_xf, qa_yf, yerr=_yerr(qa_yf, qa_lof, qa_hif), marker="s", linewidth=2, markersize=7,
+                            color="#ff7f0e", linestyle="--", capsize=4,
+                            label="best_subspan_em (full answer — lenient)")
             ax.set_title(f"Multi-document QA ({args.num_documents} docs, n={n}/pos)")
             ax.set_xlabel("Position of gold document in context")
             ax.set_ylabel("best_subspan_em")
             ax.legend(fontsize=8, loc="center right")
         else:
-            ax.plot(xs, ys, marker="o", linewidth=2, markersize=8, color="#1f77b4")
-            for x, y in zip(xs, ys):
-                ax.annotate(f"{y:.2f}", (x, y), textcoords="offset points", xytext=(0, 8), ha="center", fontsize=9)
+            ax.errorbar(xs, ys, yerr=_yerr(ys, los, his), marker="o", linewidth=2, markersize=8,
+                        color="#1f77b4", capsize=4)
             ax.set_title(f"Key-value retrieval ({args.num_keys} keys, n={n}/pos)")
             ax.set_xlabel("Position of queried key in context")
             ax.set_ylabel("accuracy")
@@ -142,17 +166,17 @@ def main():
         ax.grid(True, alpha=0.3)
         ax.set_xticks(xs)
 
-    fig.suptitle(args.title or f"'Lost in the Middle' position curves — {args.model}", fontsize=13)
+    fig.suptitle(args.title or f"'Lost in the Middle' position curves (95% CI) — {args.model}", fontsize=13)
     fig.tight_layout(rect=(0, 0, 1, 0.96))
     fig.savefig(output, dpi=150)
     logger.info("Wrote %s", output)
-    # Also echo the underlying numbers.
+    # Also echo the underlying numbers with CIs.
     if qa_x:
-        print("QA  best_subspan_em (first line):", {x: round(y, 3) for x, y in zip(qa_x, qa_y)})
+        print("QA first-line:", {x: f"{y:.3f} [{lo:.3f},{hi:.3f}]" for x, y, lo, hi in zip(qa_x, qa_y, qa_lo, qa_hi)})
     if qa_xf:
-        print("QA  best_subspan_em (full answer):", {x: round(y, 3) for x, y in zip(qa_xf, qa_yf)})
+        print("QA full:      ", {x: f"{y:.3f} [{lo:.3f},{hi:.3f}]" for x, y, lo, hi in zip(qa_xf, qa_yf, qa_lof, qa_hif)})
     if kv_x:
-        print("KV  accuracy:       ", {x: round(y, 3) for x, y in zip(kv_x, kv_y)})
+        print("KV accuracy:  ", {x: f"{y:.3f} [{lo:.3f},{hi:.3f}]" for x, y, lo, hi in zip(kv_x, kv_y, kv_lo, kv_hi)})
 
 
 if __name__ == "__main__":

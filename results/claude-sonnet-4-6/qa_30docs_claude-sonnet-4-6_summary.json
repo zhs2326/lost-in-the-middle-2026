@@ -2,6 +2,28 @@
   "model": "claude-sonnet-4-6",
   "task": "multi_document_qa",
   "num_documents": 30,
+  "bootstrap": {
+    "B": 10000,
+    "seed": 0,
+    "ref_gold_index": 0,
+    "n_per_position": 100
+  },
+  "spread_full": {
+    "best_position": 0,
+    "worst_position": 9,
+    "spread": 0.04999999999999993,
+    "ci_low": -0.020000000000000018,
+    "ci_high": 0.12,
+    "excludes_zero": false
+  },
+  "spread_first_line": {
+    "best_position": 14,
+    "worst_position": 0,
+    "spread": 0.07,
+    "ci_low": -0.010000000000000009,
+    "ci_high": 0.15000000000000002,
+    "excludes_zero": false
+  },
   "results": [
     {
       "model": "claude-sonnet-4-6",
@@ -10,7 +32,20 @@
       "n_examples": 100,
       "n_failed": 0,
       "best_subspan_em_first_line": 0.38,
-      "best_subspan_em_full": 0.73
+      "best_subspan_em_full": 0.73,
+      "em_first_line_ci_low": 0.29,
+      "em_first_line_ci_high": 0.48,
+      "em_full_ci_low": 0.64,
+      "em_full_ci_high": 0.81,
+      "ref_gold_index": 0,
+      "em_first_line_diff_vs_ref": 0.0,
+      "em_first_line_diff_ci_low": 0.0,
+      "em_first_line_diff_ci_high": 0.0,
+      "em_first_line_diff_excludes_zero": false,
+      "em_full_diff_vs_ref": 0.0,
+      "em_full_diff_ci_low": 0.0,
+      "em_full_diff_ci_high": 0.0,
+      "em_full_diff_excludes_zero": false
     },
     {
       "model": "claude-sonnet-4-6",
@@ -19,7 +54,20 @@
       "n_examples": 100,
       "n_failed": 0,
       "best_subspan_em_first_line": 0.42,
-      "best_subspan_em_full": 0.72
+      "best_subspan_em_full": 0.72,
+      "em_first_line_ci_low": 0.32,
+      "em_first_line_ci_high": 0.52,
+      "em_full_ci_low": 0.63,
+      "em_full_ci_high": 0.8,
+      "ref_gold_index": 0,
+      "em_first_line_diff_vs_ref": 0.03999999999999998,
+      "em_first_line_diff_ci_low": -0.02999999999999997,
+      "em_first_line_diff_ci_high": 0.10999999999999999,
+      "em_first_line_diff_excludes_zero": false,
+      "em_full_diff_vs_ref": -0.010000000000000009,
+      "em_full_diff_ci_low": -0.06000000000000005,
+      "em_full_diff_ci_high": 0.040000000000000036,
+      "em_full_diff_excludes_zero": false
     },
     {
       "model": "claude-sonnet-4-6",
@@ -28,7 +76,20 @@
       "n_examples": 100,
       "n_failed": 0,
       "best_subspan_em_first_line": 0.4,
-      "best_subspan_em_full": 0.68
+      "best_subspan_em_full": 0.68,
+      "em_first_line_ci_low": 0.31,
+      "em_first_line_ci_high": 0.5,
+      "em_full_ci_low": 0.59,
+      "em_full_ci_high": 0.77,
+      "ref_gold_index": 0,
+      "em_first_line_diff_vs_ref": 0.020000000000000018,
+      "em_first_line_diff_ci_low": -0.06,
+      "em_first_line_diff_ci_high": 0.10000000000000003,
+      "em_first_line_diff_excludes_zero": false,
+      "em_full_diff_vs_ref": -0.04999999999999993,
+      "em_full_diff_ci_low": -0.12,
+      "em_full_diff_ci_high": 0.020000000000000018,
+      "em_full_diff_excludes_zero": false
     },
     {
       "model": "claude-sonnet-4-6",
@@ -37,7 +98,20 @@
       "n_examples": 100,
       "n_failed": 0,
       "best_subspan_em_first_line": 0.45,
-      "best_subspan_em_full": 0.73
+      "best_subspan_em_full": 0.73,
+      "em_first_line_ci_low": 0.35,
+      "em_first_line_ci_high": 0.55,
+      "em_full_ci_low": 0.64,
+      "em_full_ci_high": 0.81,
+      "ref_gold_index": 0,
+      "em_first_line_diff_vs_ref": 0.07,
+      "em_first_line_diff_ci_low": -0.010000000000000009,
+      "em_first_line_diff_ci_high": 0.15000000000000002,
+      "em_first_line_diff_excludes_zero": false,
+      "em_full_diff_vs_ref": 0.0,
+      "em_full_diff_ci_low": -0.06000000000000005,
+      "em_full_diff_ci_high": 0.06000000000000005,
+      "em_full_diff_excludes_zero": false
     },
     {
       "model": "claude-sonnet-4-6",
@@ -46,7 +120,20 @@
       "n_examples": 100,
       "n_failed": 0,
       "best_subspan_em_first_line": 0.42,
-      "best_subspan_em_full": 0.71
+      "best_subspan_em_full": 0.71,
+      "em_first_line_ci_low": 0.32,
+      "em_first_line_ci_high": 0.52,
+      "em_full_ci_low": 0.62,
+      "em_full_ci_high": 0.79,
+      "ref_gold_index": 0,
+      "em_first_line_diff_vs_ref": 0.03999999999999998,
+      "em_first_line_diff_ci_low": -0.03999999999999998,
+      "em_first_line_diff_ci_high": 0.12,
+      "em_first_line_diff_excludes_zero": false,
+      "em_full_diff_vs_ref": -0.020000000000000018,
+      "em_full_diff_ci_low": -0.08000000000000007,
+      "em_full_diff_ci_high": 0.040000000000000036,
+      "em_full_diff_excludes_zero": false
     },
     {
       "model": "claude-sonnet-4-6",
@@ -55,7 +142,20 @@
       "n_examples": 100,
       "n_failed": 0,
       "best_subspan_em_first_line": 0.41,
-      "best_subspan_em_full": 0.7
+      "best_subspan_em_full": 0.7,
+      "em_first_line_ci_low": 0.32,
+      "em_first_line_ci_high": 0.51,
+      "em_full_ci_low": 0.61,
+      "em_full_ci_high": 0.79,
+      "ref_gold_index": 0,
+      "em_first_line_diff_vs_ref": 0.02999999999999997,
+      "em_first_line_diff_ci_low": -0.040000000000000036,
+      "em_first_line_diff_ci_high": 0.10999999999999999,
+      "em_first_line_diff_excludes_zero": false,
+      "em_full_diff_vs_ref": -0.030000000000000027,
+      "em_full_diff_ci_low": -0.09000000000000008,
+      "em_full_diff_ci_high": 0.030000000000000027,
+      "em_full_diff_excludes_zero": false
     },
     {
       "model": "claude-sonnet-4-6",
@@ -64,7 +164,20 @@
       "n_examples": 100,
       "n_failed": 0,
       "best_subspan_em_first_line": 0.41,
-      "best_subspan_em_full": 0.7
+      "best_subspan_em_full": 0.7,
+      "em_first_line_ci_low": 0.32,
+      "em_first_line_ci_high": 0.51,
+      "em_full_ci_low": 0.61,
+      "em_full_ci_high": 0.79,
+      "ref_gold_index": 0,
+      "em_first_line_diff_vs_ref": 0.02999999999999997,
+      "em_first_line_diff_ci_low": -0.04999999999999999,
+      "em_first_line_diff_ci_high": 0.10999999999999999,
+      "em_first_line_diff_excludes_zero": false,
+      "em_full_diff_vs_ref": -0.030000000000000027,
+      "em_full_diff_ci_low": -0.09000000000000008,
+      "em_full_diff_ci_high": 0.030000000000000027,
+      "em_full_diff_excludes_zero": false
     }
   ]
 }

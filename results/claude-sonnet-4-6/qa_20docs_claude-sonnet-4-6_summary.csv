@@ -1,6 +1,6 @@
-model,num_documents,gold_index,n_examples,n_failed,best_subspan_em_first_line,best_subspan_em_full
-claude-sonnet-4-6,20,0,100,0,0.4,0.77
-claude-sonnet-4-6,20,4,100,0,0.44,0.75
-claude-sonnet-4-6,20,9,100,0,0.4,0.72
-claude-sonnet-4-6,20,14,100,0,0.46,0.74
-claude-sonnet-4-6,20,19,100,0,0.42,0.73
+model,num_documents,gold_index,n_examples,n_failed,best_subspan_em_first_line,best_subspan_em_full,em_first_line_ci_low,em_first_line_ci_high,em_full_ci_low,em_full_ci_high,ref_gold_index,em_first_line_diff_vs_ref,em_first_line_diff_ci_low,em_first_line_diff_ci_high,em_first_line_diff_excludes_zero,em_full_diff_vs_ref,em_full_diff_ci_low,em_full_diff_ci_high,em_full_diff_excludes_zero
+claude-sonnet-4-6,20,0,100,0,0.4,0.77,0.31,0.5,0.69,0.85,0,0.0,0.0,0.0,False,0.0,0.0,0.0,False
+claude-sonnet-4-6,20,4,100,0,0.44,0.75,0.34,0.54,0.66,0.83,0,0.03999999999999998,-0.030000000000000027,0.11000000000000004,False,-0.020000000000000018,-0.07999999999999996,0.030000000000000027,False
+claude-sonnet-4-6,20,9,100,0,0.4,0.72,0.3,0.5,0.63,0.8,0,0.0,-0.07,0.07,False,-0.050000000000000044,-0.12,0.010000000000000009,False
+claude-sonnet-4-6,20,14,100,0,0.46,0.74,0.36,0.56,0.65,0.82,0,0.06,-0.020000000000000018,0.14,False,-0.030000000000000027,-0.09000000000000008,0.030000000000000027,False
+claude-sonnet-4-6,20,19,100,0,0.42,0.73,0.33,0.52,0.64,0.81,0,0.019999999999999962,-0.04999999999999999,0.08999999999999997,False,-0.040000000000000036,-0.10000000000000009,0.020000000000000018,False

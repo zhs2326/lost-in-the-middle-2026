@@ -36,7 +36,7 @@ def safe_model_slug(model_name):
     return model_name.replace("/", "_").replace(":", "_")
 
 
-def load_summary(slug, num_documents, metric_col):
+def load_summary(slug, num_documents, metric_col, ci_low_col, ci_high_col):
     path = f"results/{slug}/qa_{num_documents}docs_{slug}_summary.csv"
     if not os.path.exists(path):
         logger.warning("Missing summary for %s (%s) — skipping.", slug, path)
@@ -48,7 +48,11 @@ def load_summary(slug, num_documents, metric_col):
     rel = [int(r["gold_index"]) / (num_documents - 1) for r in rows]
     y = [float(r[metric_col]) for r in rows]
     n = rows[0]["n_examples"] if rows else "?"
-    return rel, y, n
+    # Bootstrap 95% CI band, when present (older summaries may predate it).
+    ci = None
+    if rows and ci_low_col in rows[0] and ci_high_col in rows[0]:
+        ci = ([float(r[ci_low_col]) for r in rows], [float(r[ci_high_col]) for r in rows])
+    return rel, y, n, ci
 
 
 def load_closedbook(slug, metric_key):
@@ -73,6 +77,7 @@ def main():
 
     metric_col = "best_subspan_em_full" if args.metric == "full" else "best_subspan_em_first_line"
     metric_key = "full" if args.metric == "full" else "first_line"
+    ci_low_col, ci_high_col = f"em_{metric_key}_ci_low", f"em_{metric_key}_ci_high"
     output = args.output or f"results/_cross_model/qa_crossmodel_{args.num_documents}docs.png"
     os.makedirs(os.path.dirname(output), exist_ok=True)
 
@@ -82,11 +87,15 @@ def main():
     for model in args.models:
         slug = safe_model_slug(model)
         color = MODEL_COLORS.get(slug) or next(fallback, "#333333")
-        loaded = load_summary(slug, args.num_documents, metric_col)
+        loaded = load_summary(slug, args.num_documents, metric_col, ci_low_col, ci_high_col)
         if loaded is None:
             continue
-        rel, y, n = loaded
+        rel, y, n, ci = loaded
         ax.plot(rel, y, marker="o", color=color, label=f"{model} (n={n})")
+        # Shaded bootstrap 95% CI band — overlapping bands across models signal that
+        # the "model-specific signatures" are within noise at this n.
+        if ci is not None:
+            ax.fill_between(rel, ci[0], ci[1], color=color, alpha=0.13, linewidth=0)
         floor = load_closedbook(slug, metric_key)
         if floor is not None:
             ax.axhline(floor, color=color, linewidth=1.2, linestyle=":", alpha=0.6)

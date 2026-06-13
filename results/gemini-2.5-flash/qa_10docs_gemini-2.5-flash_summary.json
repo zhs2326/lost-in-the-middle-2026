@@ -2,33 +2,94 @@
   "model": "gemini-2.5-flash",
   "task": "multi_document_qa",
   "num_documents": 10,
+  "bootstrap": {
+    "B": 10000,
+    "seed": 0,
+    "ref_gold_index": 0,
+    "n_per_position": 300
+  },
+  "spread_full": {
+    "best_position": 0,
+    "worst_position": 9,
+    "spread": 0.030000000000000027,
+    "ci_low": -0.00666666666666671,
+    "ci_high": 0.06666666666666665,
+    "excludes_zero": false
+  },
+  "spread_first_line": {
+    "best_position": 0,
+    "worst_position": 9,
+    "spread": 0.016666666666666607,
+    "ci_low": -0.023333333333333317,
+    "ci_high": 0.05666666666666664,
+    "excludes_zero": false
+  },
   "results": [
     {
       "model": "gemini-2.5-flash",
       "num_documents": 10,
       "gold_index": 0,
-      "n_examples": 100,
+      "n_examples": 300,
       "n_failed": 0,
-      "best_subspan_em_first_line": 0.72,
-      "best_subspan_em_full": 0.84
+      "best_subspan_em_first_line": 0.7433333333333333,
+      "best_subspan_em_full": 0.8066666666666666,
+      "em_first_line_ci_low": 0.6933333333333334,
+      "em_first_line_ci_high": 0.7933333333333333,
+      "em_full_ci_low": 0.76,
+      "em_full_ci_high": 0.85,
+      "ref_gold_index": 0,
+      "em_first_line_diff_vs_ref": 0.0,
+      "em_first_line_diff_ci_low": 0.0,
+      "em_first_line_diff_ci_high": 0.0,
+      "em_first_line_diff_excludes_zero": false,
+      "em_full_diff_vs_ref": 0.0,
+      "em_full_diff_ci_low": 0.0,
+      "em_full_diff_ci_high": 0.0,
+      "em_full_diff_excludes_zero": false
     },
     {
       "model": "gemini-2.5-flash",
       "num_documents": 10,
       "gold_index": 4,
-      "n_examples": 100,
+      "n_examples": 300,
       "n_failed": 0,
-      "best_subspan_em_first_line": 0.76,
-      "best_subspan_em_full": 0.82
+      "best_subspan_em_first_line": 0.7366666666666667,
+      "best_subspan_em_full": 0.78,
+      "em_first_line_ci_low": 0.6866666666666666,
+      "em_first_line_ci_high": 0.7866666666666666,
+      "em_full_ci_low": 0.7333333333333333,
+      "em_full_ci_high": 0.8266666666666667,
+      "ref_gold_index": 0,
+      "em_first_line_diff_vs_ref": -0.006666666666666599,
+      "em_first_line_diff_ci_low": -0.043333333333333335,
+      "em_first_line_diff_ci_high": 0.029999999999999916,
+      "em_first_line_diff_excludes_zero": false,
+      "em_full_diff_vs_ref": -0.026666666666666616,
+      "em_full_diff_ci_low": -0.05999999999999994,
+      "em_full_diff_ci_high": 0.00666666666666671,
+      "em_full_diff_excludes_zero": false
     },
     {
       "model": "gemini-2.5-flash",
       "num_documents": 10,
       "gold_index": 9,
-      "n_examples": 100,
+      "n_examples": 300,
       "n_failed": 0,
-      "best_subspan_em_first_line": 0.73,
-      "best_subspan_em_full": 0.77
+      "best_subspan_em_first_line": 0.7266666666666667,
+      "best_subspan_em_full": 0.7766666666666666,
+      "em_first_line_ci_low": 0.6733333333333333,
+      "em_first_line_ci_high": 0.7766666666666666,
+      "em_full_ci_low": 0.73,
+      "em_full_ci_high": 0.8233333333333334,
+      "ref_gold_index": 0,
+      "em_first_line_diff_vs_ref": -0.016666666666666607,
+      "em_first_line_diff_ci_low": -0.05666666666666664,
+      "em_first_line_diff_ci_high": 0.023333333333333317,
+      "em_first_line_diff_excludes_zero": false,
+      "em_full_diff_vs_ref": -0.030000000000000027,
+      "em_full_diff_ci_low": -0.06666666666666665,
+      "em_full_diff_ci_high": 0.00666666666666671,
+      "em_full_diff_excludes_zero": false
     }
   ]
 }
