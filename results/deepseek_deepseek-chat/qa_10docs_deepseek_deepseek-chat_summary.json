@@ -2,33 +2,94 @@
   "model": "deepseek:deepseek-chat",
   "task": "multi_document_qa",
   "num_documents": 10,
+  "bootstrap": {
+    "B": 10000,
+    "seed": 0,
+    "ref_gold_index": 0,
+    "n_per_position": 300
+  },
+  "spread_full": {
+    "best_position": 0,
+    "worst_position": 9,
+    "spread": 0.07000000000000006,
+    "ci_low": 0.026666666666666727,
+    "ci_high": 0.11333333333333329,
+    "excludes_zero": true
+  },
+  "spread_first_line": {
+    "best_position": 0,
+    "worst_position": 4,
+    "spread": 0.033333333333333326,
+    "ci_low": -0.006666666666666599,
+    "ci_high": 0.07333333333333336,
+    "excludes_zero": false
+  },
   "results": [
     {
       "model": "deepseek:deepseek-chat",
       "num_documents": 10,
       "gold_index": 0,
-      "n_examples": 100,
+      "n_examples": 300,
       "n_failed": 0,
-      "best_subspan_em_first_line": 0.72,
-      "best_subspan_em_full": 0.82
+      "best_subspan_em_first_line": 0.7433333333333333,
+      "best_subspan_em_full": 0.8333333333333334,
+      "em_first_line_ci_low": 0.6933333333333334,
+      "em_first_line_ci_high": 0.7933333333333333,
+      "em_full_ci_low": 0.79,
+      "em_full_ci_high": 0.8733333333333333,
+      "ref_gold_index": 0,
+      "em_first_line_diff_vs_ref": 0.0,
+      "em_first_line_diff_ci_low": 0.0,
+      "em_first_line_diff_ci_high": 0.0,
+      "em_first_line_diff_excludes_zero": false,
+      "em_full_diff_vs_ref": 0.0,
+      "em_full_diff_ci_low": 0.0,
+      "em_full_diff_ci_high": 0.0,
+      "em_full_diff_excludes_zero": false
     },
     {
       "model": "deepseek:deepseek-chat",
       "num_documents": 10,
       "gold_index": 4,
-      "n_examples": 100,
+      "n_examples": 300,
       "n_failed": 0,
-      "best_subspan_em_first_line": 0.69,
-      "best_subspan_em_full": 0.78
+      "best_subspan_em_first_line": 0.71,
+      "best_subspan_em_full": 0.7933333333333333,
+      "em_first_line_ci_low": 0.6566666666666666,
+      "em_first_line_ci_high": 0.76,
+      "em_full_ci_low": 0.7466666666666667,
+      "em_full_ci_high": 0.8366666666666667,
+      "ref_gold_index": 0,
+      "em_first_line_diff_vs_ref": -0.033333333333333326,
+      "em_first_line_diff_ci_low": -0.07333333333333336,
+      "em_first_line_diff_ci_high": 0.006666666666666599,
+      "em_first_line_diff_excludes_zero": false,
+      "em_full_diff_vs_ref": -0.040000000000000036,
+      "em_full_diff_ci_low": -0.07999999999999996,
+      "em_full_diff_ci_high": -0.0033333333333332993,
+      "em_full_diff_excludes_zero": true
     },
     {
       "model": "deepseek:deepseek-chat",
       "num_documents": 10,
       "gold_index": 9,
-      "n_examples": 100,
+      "n_examples": 300,
       "n_failed": 0,
-      "best_subspan_em_first_line": 0.69,
-      "best_subspan_em_full": 0.75
+      "best_subspan_em_first_line": 0.71,
+      "best_subspan_em_full": 0.7633333333333333,
+      "em_first_line_ci_low": 0.66,
+      "em_first_line_ci_high": 0.76,
+      "em_full_ci_low": 0.7133333333333334,
+      "em_full_ci_high": 0.81,
+      "ref_gold_index": 0,
+      "em_first_line_diff_vs_ref": -0.033333333333333326,
+      "em_first_line_diff_ci_low": -0.07666666666666666,
+      "em_first_line_diff_ci_high": 0.010000000000000009,
+      "em_first_line_diff_excludes_zero": false,
+      "em_full_diff_vs_ref": -0.07000000000000006,
+      "em_full_diff_ci_low": -0.11333333333333329,
+      "em_full_diff_ci_high": -0.026666666666666727,
+      "em_full_diff_excludes_zero": true
     }
   ]
 }

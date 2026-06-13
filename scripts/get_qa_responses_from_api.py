@@ -53,6 +53,7 @@ def main(
     num_workers,
     reasoning_effort,
     reasoning_buffer,
+    max_retries,
     output_path,
 ):
     # Create directory for output path if it doesn't exist.
@@ -116,6 +117,7 @@ def main(
         num_workers=num_workers,
         reasoning_effort=reasoning_effort,
         reasoning_buffer=reasoning_buffer,
+        max_retries=max_retries,
         return_failures=True,
     )
 
@@ -215,6 +217,16 @@ if __name__ == "__main__":
             "'empty content with finish_reason=length' warnings. See REASONING_TOKENS.md."
         ),
     )
+    parser.add_argument(
+        "--max-retries",
+        type=int,
+        default=5,
+        help=(
+            "Max attempts per prompt on transient errors (429 / 5xx). Backoff is exponential, "
+            "capped at 30s, so 5 attempts cover ~31s; raise it (e.g. 12) to ride out longer "
+            "provider 'high demand' (503) spikes without forcing examples to count as wrong."
+        ),
+    )
     args = parser.parse_args()
 
     logger.info("running %s", " ".join(sys.argv))
@@ -232,6 +244,7 @@ if __name__ == "__main__":
         args.num_workers,
         args.reasoning_effort,
         args.reasoning_buffer,
+        args.max_retries,
         args.output_path,
     )
     logger.info("finished running %s", sys.argv[0])
